@@ -1,4 +1,5 @@
 ﻿using Catalog.Domain;
+using Catalog.Persistence.Database.Config;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -26,7 +27,8 @@ namespace Catalog.Persistence.Database
 
         private void ModelConfig(ModelBuilder modelBuilder) 
         {
-            //new ProductConfiguration(modelBuilder.Entity < Product() >);
+            new ProductConfiguration(modelBuilder.Entity < Product>());
+            new ProductInStockConfiguration(modelBuilder.Entity<ProductInStock>());
         }
     }
 }
