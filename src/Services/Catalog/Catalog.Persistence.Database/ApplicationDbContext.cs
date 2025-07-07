@@ -27,7 +27,7 @@ namespace Catalog.Persistence.Database
 
         private void ModelConfig(ModelBuilder modelBuilder) 
         {
-            new ProductConfiguration(modelBuilder.Entity < Product>());
+            new ProductConfiguration(modelBuilder.Entity<Product>());
             new ProductInStockConfiguration(modelBuilder.Entity<ProductInStock>());
         }
     }
