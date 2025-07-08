@@ -1,7 +1,10 @@
 using Catalog.Persistence.Database;
 using Catalog.Service.EventHandlers;
 using Catalog.Services.Queries;
+using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging.Configuration;
 using Serilog;
 using Serilog.Sinks.Syslog;
@@ -19,6 +22,10 @@ var builder = WebApplication.CreateBuilder(args);
 
 ////Añadir Serilog como el proveedor de logging
 //builder.Host.UseSerilog(); //Asegurate de tener 'using Serilog'
+
+builder.Services.AddHealthChecks()
+    .AddCheck("self", () => HealthCheckResult.Healthy())
+    .AddDbContextCheck<ApplicationDbContext>();
 
 // Add services to the container.
 
@@ -58,7 +65,13 @@ else
     app.UseHsts();
 }
 
-    app.UseAuthorization();
+app.UseAuthorization();
+
+app.MapHealthChecks("/hc", new HealthCheckOptions()
+{
+    Predicate = _ => true,
+    ResponseWriter = UIResponseWriter.WriteHealthCheckUIResponse
+});
 
 app.MapControllers();
 
