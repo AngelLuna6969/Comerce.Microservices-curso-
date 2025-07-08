@@ -20,7 +20,7 @@ namespace Catalog.Persistence.Database.Config
             //Products by default
             var products = new List<ProductInStock>();
             var ramdom = new Random();
-            for (var i = 1; 1 <= 100; i++)
+            for (var i = 1; i <= 100; i++)
             {
                 products.Add(new ProductInStock
                 {

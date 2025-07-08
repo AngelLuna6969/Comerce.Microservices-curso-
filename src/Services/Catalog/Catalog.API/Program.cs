@@ -2,8 +2,23 @@ using Catalog.Persistence.Database;
 using Catalog.Service.EventHandlers;
 using Catalog.Services.Queries;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging.Configuration;
+using Serilog;
+using Serilog.Sinks.Syslog;
+using System.Net.Sockets;
 
 var builder = WebApplication.CreateBuilder(args);
+
+////Configurar Serilog para usar Syslog y Papertrail
+//var papertrailHost = builder.Configuration.GetValue<string>("Papertrail:host");
+//var papertrailPort = builder.Configuration.GetValue<int>("Papertrail:port");
+
+//Log.Logger = new LoggerConfiguration()
+//    .WriteTo.Syslog(papertrailHost, papertrailPort, ProtocolType.Udp)
+//    .CreateLogger();
+
+////Añadir Serilog como el proveedor de logging
+//builder.Host.UseSerilog(); //Asegurate de tener 'using Serilog'
 
 // Add services to the container.
 
@@ -33,11 +48,17 @@ var app = builder.Build();
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
+    app.UseDeveloperExceptionPage();
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+else
+{
+    app.UseExceptionHandler("/Home/Error");
+    app.UseHsts();
+}
 
-app.UseAuthorization();
+    app.UseAuthorization();
 
 app.MapControllers();
 
