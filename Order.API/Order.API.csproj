@@ -34,4 +34,8 @@
     <ProjectReference Include="..\src\Services\Order\Order.Service.Proxies\Order.Service.Proxies.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Controllers\" />
+  </ItemGroup>
+
 </Project>

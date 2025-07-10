@@ -1,5 +1,6 @@
 ﻿using MediatR;
 using Microsoft.Extensions.Logging;
+using Order.Domain;
 using Order.Persistence.Database;
 using Order.Service.EventHandlers.Commands;
 using Order.Service.Proxies.Catalog;
@@ -36,7 +37,7 @@ namespace Order.Service.EventHandlers
 
                 //02. Prepare header
                 _logger.LogInformation("-- Preparing header");
-                PrepareDetail(entry, notification);
+                PrepareHeader(entry, notification);
 
                 //03. Create order
                 _logger.LogInformation("-- Creating order");
@@ -64,7 +65,25 @@ namespace Order.Service.EventHandlers
 
         private void PrepareDetail(Domain.Order entry, OrderCreateCommand notification)
         {
+            entry.Items = notification.Items.Select(x => new OrderDetail
+            {
+                ProductId = x.ProductId,
+                Quantity = x.Quantity,
+                UnitPrice = x.Price,
+                Total = x.Price * x.Quantity
+            }).ToList();
+        }
 
+        private void PrepareHeader(Domain.Order entry, OrderCreateCommand notification)
+        {
+            //Header informacion
+            entry.Status = Common.Enum.OrderStatus.Peanding;
+            entry.PaymentType = notification.Payment;
+            entry.ClientId = notification.ClientId;
+            entry.CreatedAt = DateTime.UtcNow;
+
+            //Sum
+            entry.Total = entry.Items.Sum(x => x.Total);
         }
     }
 }
