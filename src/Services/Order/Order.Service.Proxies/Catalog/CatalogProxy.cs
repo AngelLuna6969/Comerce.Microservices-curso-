@@ -8,9 +8,13 @@ using System.Text;
 using System.Text.Json;
 using System.Threading.Tasks;
 
-namespace Order.Service.Proxies
+namespace Order.Service.Proxies.Catalog
 {
-    public class CatalogProxy
+    public interface ICatalogProxy
+    {
+        Task UpdateStockAsync(ProductInStockUpdateStockCommand command);
+    }
+    public class CatalogProxy : ICatalogProxy
     {
         private readonly HttpClient _httpClient;
         private readonly ApisUrls _apisUrls;

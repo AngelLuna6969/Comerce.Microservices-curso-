@@ -2,6 +2,8 @@
 using Microsoft.Extensions.Logging;
 using Order.Persistence.Database;
 using Order.Service.EventHandlers.Commands;
+using Order.Service.Proxies.Catalog;
+using Order.Service.Proxies.Catalog.Commands;
 
 namespace Order.Service.EventHandlers
 {
@@ -9,13 +11,16 @@ namespace Order.Service.EventHandlers
     {
         private readonly ApplicationDbContext _context;
         private readonly ILogger<OrderCreateEventHandler> _logger;
+        private readonly ICatalogProxy _catalogProxy;
 
         public OrderCreateEventHandler(
             ApplicationDbContext context,
-            ILogger<OrderCreateEventHandler> logger)
+            ILogger<OrderCreateEventHandler> logger,
+            ICatalogProxy catalogProxy)
         {
             _context = context;
             _logger = logger;
+            _catalogProxy = catalogProxy;
         }
 
         public async Task Handle(OrderCreateCommand notification, CancellationToken cancellationToken)
@@ -42,6 +47,15 @@ namespace Order.Service.EventHandlers
 
                 //04. Update Stock
                 //pediente
+                await _catalogProxy.UpdateStockAsync(new ProductInStockUpdateStockCommand
+                {
+                    Items = notification.Items.Select(x => new ProductInStockUpdateItem
+                    {
+                        ProductId = x.ProductId,
+                        Stock = x.Quantity,
+                        Action = ProductInStockAction.Substract
+                    })
+                });
 
                 await trx.CommitAsync();
             }

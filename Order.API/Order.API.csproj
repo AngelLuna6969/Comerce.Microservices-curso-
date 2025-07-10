@@ -7,7 +7,31 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.1" />
+    <PackageReference Include="MediatR" Version="12.4.0" />
+    <PackageReference Include="MediatR.Extensions.Microsoft.DependencyInjection" Version="11.1.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="8.0.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks" Version="8.0.7" />
+    <PackageReference Include="Microsoft.Extensions.Diagnostics.HealthChecks.EntityFrameworkCore" Version="8.0.7" />
+    <PackageReference Include="Serilog" Version="4.3.0" />
+    <PackageReference Include="Serilog.AspNetCore" Version="8.0.2" />
+    <PackageReference Include="Serilog.Sinks.Syslog" Version="0.2.0" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\src\Services\Common\Order.Service.EventHandlers\Order.Service.EventHandlers.csproj" />
+    <ProjectReference Include="..\src\Services\Common\Order.Service.Queries\Order.Service.Queries.csproj" />
+    <ProjectReference Include="..\src\Services\Common\Service.Common.Collection\Service.Common.Collection.csproj" />
+    <ProjectReference Include="..\src\Services\Common\Service.Common.Mapping\Service.Common.Mapping.csproj" />
+    <ProjectReference Include="..\src\Services\Common\Service.Common.Paging\Service.Common.Paging.csproj" />
+    <ProjectReference Include="..\src\Services\Order\Order.Common\Order.Common.csproj" />
+    <ProjectReference Include="..\src\Services\Order\Order.Domain\Order.Domain.csproj" />
+    <ProjectReference Include="..\src\Services\Order\Order.Persistence.Database\Order.Persistence.Database.csproj" />
+    <ProjectReference Include="..\src\Services\Order\Order.Service.Proxies\Order.Service.Proxies.csproj" />
   </ItemGroup>
 
 </Project>

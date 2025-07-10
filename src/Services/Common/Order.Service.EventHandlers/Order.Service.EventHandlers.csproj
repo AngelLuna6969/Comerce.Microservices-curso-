@@ -13,6 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\Order\Order.Persistence.Database\Order.Persistence.Database.csproj" />
+    <ProjectReference Include="..\..\Order\Order.Service.Proxies\Order.Service.Proxies.csproj" />
   </ItemGroup>
 
 </Project>
