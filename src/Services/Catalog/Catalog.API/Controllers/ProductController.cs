@@ -2,12 +2,15 @@
 using Catalog.Service.EventHandlers.Commands;
 using Catalog.Services.Queries;
 using MediatR;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Service.Common.Collection;
 
 namespace Catalog.API.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("products")]
     public class ProductController : ControllerBase

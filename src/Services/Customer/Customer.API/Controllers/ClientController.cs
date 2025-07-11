@@ -6,9 +6,12 @@ using Microsoft.AspNetCore.Mvc;
 using Service.Common.Collection;
 using Customer.Domain;
 using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Customer.API.Controllers
 {
+    [Authorize(AuthenticationSchemes = JwtBearerDefaults.AuthenticationScheme)]
     [ApiController]
     [Route("clients")]
     public class ClientController : Controller

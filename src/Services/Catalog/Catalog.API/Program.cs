@@ -2,13 +2,16 @@ using Catalog.Persistence.Database;
 using Catalog.Service.EventHandlers;
 using Catalog.Services.Queries;
 using HealthChecks.UI.Client;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.Extensions.Logging.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using Serilog;
 using Serilog.Sinks.Syslog;
 using System.Net.Sockets;
+using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -49,6 +52,23 @@ builder.Services.AddMediatR(cfg =>
 //Dependenci Inyection
 builder.Services.AddTransient<IProductQueryService, ProductQueryService>();
 builder.Services.AddTransient<IProductInStockQueryService, ProductInStockQueryService>();
+
+var secretKey = Encoding.ASCII.GetBytes(
+    builder.Configuration.GetValue<string>("SecretKey"));
+
+//Añadimos Autenticacion
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJwtBearer(x =>
+{
+    x.RequireHttpsMetadata = false;
+    x.SaveToken = true;
+    x.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(secretKey),
+        ValidateIssuer = false,
+        ValidateAudience = false
+    };
+});
 
 var app = builder.Build();
 
