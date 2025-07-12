@@ -34,7 +34,7 @@ namespace Order.Service.Proxies.Catalog
                 Encoding.UTF8,
                 "application/json"
             );
-            var request = await _httpClient.PutAsync(_apisUrls.CatalogUrl + "stocks", content);
+            var request = await _httpClient.PutAsync("http://localhost:20000/stocks", content);
             request.EnsureSuccessStatusCode();
         }
     }

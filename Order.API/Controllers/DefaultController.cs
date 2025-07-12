@@ -9,7 +9,7 @@ namespace Order.API.Controllers
         [HttpGet]
         public string Index()
         {
-            return "Customers.API it's working ...";
+            return "Order.API it's working ...";
         }
     }
 }

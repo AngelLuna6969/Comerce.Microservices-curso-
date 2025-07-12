@@ -9,7 +9,7 @@ namespace Identity.API.Controllers
         [HttpGet]
         public string Index()
         {
-            return "Customers.API it's working ...";
+            return "Identity.API it's working ...";
         }
     }
 }
