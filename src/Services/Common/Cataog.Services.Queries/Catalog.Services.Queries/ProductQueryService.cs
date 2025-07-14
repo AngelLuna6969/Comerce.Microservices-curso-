@@ -1,6 +1,8 @@
 ﻿using Catalog.Domain;
 using Catalog.Persistence.Database;
+using Catalog.Service.EventHandlers;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using Service.Common.Collection;
 using Service.Common.Mapping;
 using Service.Common.Paging;
@@ -22,14 +24,18 @@ namespace Catalog.Services.Queries
     {
         //Inyeccion de dependencias
         private readonly ApplicationDbContext _context;
+        private readonly ILogger<ProductInStockUpdateStockEventHandler> _logger;
 
-        public ProductQueryService(ApplicationDbContext context)
+        public ProductQueryService(ApplicationDbContext context, ILogger<ProductInStockUpdateStockEventHandler> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         public async Task<DataCollection<ProductDTO>> GetAllAsync(int page, int take, IEnumerable<int> products = null)
         {
+            _logger.LogInformation("--- ProductAllCommand Started");
+
             var collection = await _context.Products
                 .Where(x => products == null || products.Contains(x.IDProduct))
                 .OrderByDescending(x => x.IDProduct)

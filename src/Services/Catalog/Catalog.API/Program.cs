@@ -1,6 +1,7 @@
 using Catalog.Persistence.Database;
 using Catalog.Service.EventHandlers;
 using Catalog.Services.Queries;
+using Common.Logging;
 using HealthChecks.UI.Client;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Diagnostics.HealthChecks;
@@ -15,16 +16,17 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-////Configurar Serilog para usar Syslog y Papertrail
-//var papertrailHost = builder.Configuration.GetValue<string>("Papertrail:host");
-//var papertrailPort = builder.Configuration.GetValue<int>("Papertrail:port");
+////Configurar Serilog para usar Papertrail
+var papertrailToken = builder.Configuration.GetValue<string>("Papertrail:Token");
+var papertrailEndpointUrl = builder.Configuration.GetValue<string>("Papertrail:EndpointUrl");
 
-//Log.Logger = new LoggerConfiguration()
-//    .WriteTo.Syslog(papertrailHost, papertrailPort, ProtocolType.Udp)
-//    .CreateLogger();
-
-////Añadir Serilog como el proveedor de logging
-//builder.Host.UseSerilog(); //Asegurate de tener 'using Serilog'
+// Configura Serilog para enviar logs a Papertrail usando HTTP.
+Log.Logger = new LoggerConfiguration()
+    .WriteTo.Http(
+        requestUri: papertrailEndpointUrl,  // Especifica la URL de Papertrail donde se enviarán los logs vía HTTP
+        httpClient: new PapertrailHttpClient(papertrailToken),  // Usa un cliente HTTP personalizado con autenticación
+        queueLimitBytes: 100_000)   // Define un límite de tamaño para la cola de logs antes de enviarlos
+    .CreateLogger();    //Construye el logger
 
 builder.Services.AddHealthChecks()
     .AddCheck("self", () => HealthCheckResult.Healthy())
